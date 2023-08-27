@@ -1,22 +1,14 @@
 'use client';
 
 import clsx from 'clsx';
-import { ProductOption, ProductVariant } from 'lib/shopify/types';
+import { ProductOption } from 'lib/shopify/types';
 import { createUrl } from 'lib/utils';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-type Combination = {
-  id: string;
-  availableForSale: boolean;
-  [key: string]: string | boolean; // ie. { color: 'Red', size: 'Large', ... }
-};
-
 export function VariantSelector({
   options,
-  variants
 }: {
   options: ProductOption[];
-  variants: ProductVariant[];
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -27,16 +19,6 @@ export function VariantSelector({
   if (hasNoOptionsOrJustOneOption) {
     return null;
   }
-
-  const combinations: Combination[] = variants.map((variant) => ({
-    id: variant.id,
-    availableForSale: variant.availableForSale,
-    // Adds key / value pairs for each variant (ie. "color": "Black" and "size": 'M").
-    ...variant.selectedOptions.reduce(
-      (accumulator, option) => ({ ...accumulator, [option.name.toLowerCase()]: option.value }),
-      {}
-    )
-  }));
 
   return options.map((option) => (
     <dl className="mb-8" key={option.id}>
@@ -62,16 +44,8 @@ export function VariantSelector({
           // This is the "magic" that will cross check possible variant combinations and preemptively
           // disable combinations that are not available. For example, if the color gray is only available in size medium,
           // then all other sizes should be disabled.
-          const filtered = Array.from(optionSearchParams.entries()).filter(([key, value]) =>
-            options.find(
-              (option) => option.name.toLowerCase() === key && option.values.includes(value)
-            )
-          );
-          const isAvailableForSale = combinations.find((combination) =>
-            filtered.every(
-              ([key, value]) => combination[key] === value && combination.availableForSale
-            )
-          );
+
+          const isAvailableForSale = true;
 
           // The option is active if it's in the url params.
           const isActive = searchParams.get(optionNameLowerCase) === value;

@@ -1,0 +1,4 @@
+- Use destructuring for metadata
+- Implement LDJSON for SEO
+- Stop using dummy data for options
+- 

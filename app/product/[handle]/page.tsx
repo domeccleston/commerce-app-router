@@ -1,12 +1,13 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { ProductDescription } from "components/product/product-description";
-
-import { Gallery } from "components/product/gallery";
-import { IDProduct } from "./types";
-import { Suspense } from "react";
+import { GridTileImage } from "components/grid/tile";
 import Footer from "components/layout/footer";
+import { Gallery } from "components/product/gallery";
+import { ProductDescription } from "components/product/product-description";
+import Link from "next/link";
+import { Suspense } from "react";
+import { IDProduct } from "./types";
 
 export const runtime = 'edge';
 
@@ -49,9 +50,9 @@ export default async function InterdiscountProductPage() {
             <ProductDescription product={product} />
           </div>
         </div>
-        {/* <Suspense>
+        <Suspense>
           <RelatedProducts id={product.id} />
-        </Suspense> */}
+        </Suspense>
       </div>
       <Suspense>
         <Footer />
@@ -140,36 +141,37 @@ export async function generateMetadata(): Promise<Metadata> {
 //   );
 // }
 
-// async function RelatedProducts({ id }: { id: string }) {
-//   const relatedProducts = await getProductRecommendations(id);
+async function RelatedProducts({ id }: { id: string }) {
+  // const relatedProducts = await getProductRecommendations(id);
+  const relatedProducts = [];
 
-//   if (!relatedProducts.length) return null;
+  if (!relatedProducts.length) return null;
 
-//   return (
-//     <div className="py-8">
-//       <h2 className="mb-4 text-2xl font-bold">Related Products</h2>
-//       <ul className="flex w-full gap-4 overflow-x-auto pt-1">
-//         {relatedProducts.map((product) => (
-//           <li
-//             key={product.handle}
-//             className="aspect-square w-full flex-none min-[475px]:w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5"
-//           >
-//             <Link className="relative h-full w-full" href={`/product/${product.handle}`}>
-//               <GridTileImage
-//                 alt={product.title}
-//                 label={{
-//                   title: product.title,
-//                   amount: product.priceRange.maxVariantPrice.amount,
-//                   currencyCode: product.priceRange.maxVariantPrice.currencyCode
-//                 }}
-//                 src={product.featuredImage?.url}
-//                 fill
-//                 sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, (min-width: 475px) 50vw, 100vw"
-//               />
-//             </Link>
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
+  return (
+    <div className="py-8">
+      <h2 className="mb-4 text-2xl font-bold">Related Products</h2>
+      <ul className="flex w-full gap-4 overflow-x-auto pt-1">
+        {relatedProducts.map((product) => (
+          <li
+            key={product.handle}
+            className="aspect-square w-full flex-none min-[475px]:w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5"
+          >
+            <Link className="relative h-full w-full" href={`/product/${product.handle}`}>
+              <GridTileImage
+                alt={product.title}
+                label={{
+                  title: product.title,
+                  amount: product.priceRange.maxVariantPrice.amount,
+                  currencyCode: product.priceRange.maxVariantPrice.currencyCode
+                }}
+                src={product.featuredImage?.url}
+                fill
+                sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, (min-width: 475px) 50vw, 100vw"
+              />
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
